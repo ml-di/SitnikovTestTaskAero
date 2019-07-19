@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">SitnikovTestTask</string>
+
+    <string name="bottomNavigationView_one">Главная</string>
+    <string name="bottomNavigationView_two">Каталог</string>
+    <string name="bottomNavigationView_three">Акции</string>
+    <string name="bottomNavigationView_four">Профиль</string>
+    <string name="bottomNavigationView_five">Корзина</string>
+
+    <string name="blank_fragment">Blank Fragment</string>
+
+    <string name="collectionsProductText">%1$d изделий</string>
+</resources>

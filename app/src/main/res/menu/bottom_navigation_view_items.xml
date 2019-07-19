@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/bnv_main"
+        android:icon="@drawable/ic_main"
+        android:title="@string/bottomNavigationView_one" />
+    <item
+        android:id="@+id/bnv_catalog"
+        android:icon="@drawable/ic_catalog"
+        android:title="@string/bottomNavigationView_two" />
+    <item
+        android:id="@+id/bnv_special_offers"
+        android:icon="@drawable/ic_special_offers"
+        android:title="@string/bottomNavigationView_three" />
+    <item
+        android:id="@+id/bnv_profile"
+        android:icon="@drawable/ic_profile"
+        android:title="@string/bottomNavigationView_four" />
+    <item
+        android:id="@+id/bnv_cart"
+        android:icon="@drawable/ic_cart"
+        android:title="@string/bottomNavigationView_five" />
+
+</menu>
