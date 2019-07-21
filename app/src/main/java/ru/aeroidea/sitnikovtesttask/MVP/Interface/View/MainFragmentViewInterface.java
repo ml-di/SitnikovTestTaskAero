@@ -12,8 +12,8 @@ public interface MainFragmentViewInterface extends MVPView {
     void initTabLayout(int resId);
     void initRecyclerView(int resId);
 
-    Context getActivityContext();
     ViewPager getBannerViewPager();
     RecyclerView getCollectionsRecyclerView();
     MainFragmentPresenterInterface getPresenter();
+    Context getActivityContext();
 }

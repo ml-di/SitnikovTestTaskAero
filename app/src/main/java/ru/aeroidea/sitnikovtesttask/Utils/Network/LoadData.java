@@ -18,6 +18,7 @@ public class LoadData extends AsyncTask<Void, Void, Boolean> {
     private MainFragmentPresenterInterface presenter;
 
     public LoadData(MainFragmentPresenterInterface presenter) {
+
         this.presenter = presenter;
     }
 

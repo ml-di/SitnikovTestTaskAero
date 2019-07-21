@@ -1,5 +1,6 @@
 package ru.aeroidea.sitnikovtesttask.Database.Loader;
 
+import android.content.Context;
 import android.os.AsyncTask;
 import java.util.List;
 import ru.aeroidea.sitnikovtesttask.Activity.MainActivityView;
@@ -29,7 +30,8 @@ public class LoadCollectionsFromCache extends AsyncTask<Void, Void, List<Collect
     @Override
     protected List<CollectionsData> doInBackground(Void... voids) {
 
-        final AppDatabase db = ((MainActivityView) presenter.getView().getActivityContext()).getDatabase();
+        final Context mContext = presenter.getView().getActivityContext();
+        final AppDatabase db = ((MainActivityView) mContext).getDatabase();
         if (db.getOpenHelper().getReadableDatabase().isOpen() && db.collectionsDao().getCount() > 0) {
             return db.collectionsDao().getAllCollections();
         }

@@ -49,7 +49,9 @@ public class MainFragmentPresenter extends BasePresenter<MainFragmentViewInterfa
             con.setRequestMethod("POST");
             con.setRequestProperty("Content-Type", "application/json");
             con.setRequestProperty("Authorization", basicAuth);
+            con.setRequestProperty("Connection", "close");
             con.setDoOutput(true);
+            con.setUseCaches(false);
 
             final DataOutputStream out = new DataOutputStream(con.getOutputStream());
             out.writeBytes("{\"countryCode\": \"ru\"}");
@@ -71,7 +73,6 @@ public class MainFragmentPresenter extends BasePresenter<MainFragmentViewInterfa
                 return null;
             }
         } catch (Exception e) {
-            e.printStackTrace();
             return null;
         }
     }

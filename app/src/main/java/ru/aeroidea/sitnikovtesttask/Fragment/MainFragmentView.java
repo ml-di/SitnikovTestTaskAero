@@ -82,11 +82,6 @@ public class MainFragmentView extends Fragment implements MainFragmentViewInterf
     }
 
     @Override
-    public Context getActivityContext() {
-        return mContext;
-    }
-
-    @Override
     public ViewPager getBannerViewPager() {
         return bannerViewPager;
     }
@@ -99,5 +94,10 @@ public class MainFragmentView extends Fragment implements MainFragmentViewInterf
     @Override
     public MainFragmentPresenterInterface getPresenter() {
         return presenter;
+    }
+
+    @Override
+    public Context getActivityContext() {
+        return mContext;
     }
 }

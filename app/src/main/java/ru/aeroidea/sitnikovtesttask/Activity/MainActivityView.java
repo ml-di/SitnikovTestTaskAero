@@ -6,6 +6,8 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
+
+import android.content.Context;
 import android.os.Bundle;
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
@@ -194,5 +196,10 @@ public class MainActivityView extends AppCompatActivity implements MainActivityV
     @Override
     public AppDatabase getDatabase() {
         return db;
+    }
+
+    @Override
+    public Context getContext() {
+        return this;
     }
 }

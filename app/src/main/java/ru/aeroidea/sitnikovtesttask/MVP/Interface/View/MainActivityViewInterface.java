@@ -1,5 +1,7 @@
 package ru.aeroidea.sitnikovtesttask.MVP.Interface.View;
 
+import android.content.Context;
+
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import ru.aeroidea.sitnikovtesttask.Database.AppDatabase;
@@ -29,4 +31,5 @@ public interface MainActivityViewInterface extends MVPView {
     MainActivityPresenterInterface getPresenter();
     FragmentManager getActivityFragmentManager();
     AppDatabase getDatabase();
+    Context getContext();
 }

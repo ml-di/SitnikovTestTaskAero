@@ -8,6 +8,7 @@ import ru.aeroidea.sitnikovtesttask.Adapter.BannerPagerAdapter;
 import ru.aeroidea.sitnikovtesttask.Data.BannersData;
 import ru.aeroidea.sitnikovtesttask.Database.AppDatabase;
 import ru.aeroidea.sitnikovtesttask.MVP.Interface.Presenter.MainFragmentPresenterInterface;
+import ru.aeroidea.sitnikovtesttask.MVP.Presenter.MainFragmentPresenter;
 
 public class LoadBannersFromCache extends AsyncTask<Void, Void, List<BannersData>> {
 
@@ -31,7 +32,9 @@ public class LoadBannersFromCache extends AsyncTask<Void, Void, List<BannersData
     @Override
     protected List<BannersData> doInBackground(Void... voids) {
 
-        final AppDatabase db = ((MainActivityView) presenter.getView().getActivityContext()).getDatabase();
+        final Context mContext = presenter.getView().getActivityContext();
+        final AppDatabase db = ((MainActivityView) mContext).getDatabase();
+
         if (db.getOpenHelper().getReadableDatabase().isOpen() && db.bannersDao().getCount() > 0) {
             return db.bannersDao().getAllBanners();
         }
