@@ -8,20 +8,19 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.widget.AppCompatImageView;
 import androidx.appcompat.widget.AppCompatTextView;
 import androidx.viewpager.widget.PagerAdapter;
-import java.util.ArrayList;
-
+import java.util.List;
 import ru.aeroidea.sitnikovtesttask.Activity.MainActivityView;
 import ru.aeroidea.sitnikovtesttask.Data.BannersData;
 import ru.aeroidea.sitnikovtesttask.Fragment.BlankFragmentView;
 import ru.aeroidea.sitnikovtesttask.R;
-import ru.aeroidea.sitnikovtesttask.Utils.LoadImageFromUrl;
+import ru.aeroidea.sitnikovtesttask.Utils.Network.LoadImageFromUrl;
 
 public class BannerPagerAdapter extends PagerAdapter {
 
-    private ArrayList<BannersData> bannersList;
+    private List<BannersData> bannersList;
     private Context mContext;
 
-    public BannerPagerAdapter(ArrayList<BannersData> bannersList, Context context) {
+    public BannerPagerAdapter(List<BannersData> bannersList, Context context) {
         this.bannersList = bannersList;
         this.mContext = context;
     }
@@ -35,7 +34,7 @@ public class BannerPagerAdapter extends PagerAdapter {
         final AppCompatTextView bannerText = view.findViewById(R.id.bannerText);
         final AppCompatImageView bannerImage = view.findViewById(R.id.bannerImage);
         bannerText.setText(bannersList.get(position).getTitle());
-        new LoadImageFromUrl(bannerImage).execute(bannersList.get(position).getImg());
+        new LoadImageFromUrl(bannerImage, ((MainActivityView) mContext).getDatabase()).execute(bannersList.get(position).getImg());
 
         view.setOnClickListener(v -> {
             final String title = bannersList.get(position).getTitle();

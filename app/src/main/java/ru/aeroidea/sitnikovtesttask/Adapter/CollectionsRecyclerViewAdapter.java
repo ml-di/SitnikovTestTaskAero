@@ -9,16 +9,16 @@ import androidx.appcompat.widget.AppCompatImageView;
 import androidx.appcompat.widget.AppCompatTextView;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
-import java.util.ArrayList;
+import java.util.List;
 import ru.aeroidea.sitnikovtesttask.Activity.MainActivityView;
 import ru.aeroidea.sitnikovtesttask.Data.CollectionsData;
 import ru.aeroidea.sitnikovtesttask.Fragment.BlankFragmentView;
 import ru.aeroidea.sitnikovtesttask.R;
-import ru.aeroidea.sitnikovtesttask.Utils.LoadImageFromUrl;
+import ru.aeroidea.sitnikovtesttask.Utils.Network.LoadImageFromUrl;
 
 public class CollectionsRecyclerViewAdapter extends RecyclerView.Adapter<CollectionsRecyclerViewAdapter.CollectionsViewHolder> {
 
-    private ArrayList<CollectionsData> collectionsList;
+    private List<CollectionsData> collectionsList;
     private Context mContext;
 
     static class CollectionsViewHolder extends RecyclerView.ViewHolder {
@@ -28,7 +28,7 @@ public class CollectionsRecyclerViewAdapter extends RecyclerView.Adapter<Collect
         private AppCompatTextView productsCountTextView;
         private CardView cardView;
 
-        CollectionsViewHolder(@NonNull View itemView, Context mContext, ArrayList<CollectionsData> collectionsList) {
+        CollectionsViewHolder(@NonNull View itemView, Context mContext, List<CollectionsData> collectionsList) {
             super(itemView);
 
             backgroundImage = itemView.findViewById(R.id.collections_image);
@@ -42,7 +42,7 @@ public class CollectionsRecyclerViewAdapter extends RecyclerView.Adapter<Collect
         }
     }
 
-    public CollectionsRecyclerViewAdapter(ArrayList<CollectionsData> collectionsList) {
+    public CollectionsRecyclerViewAdapter(List<CollectionsData> collectionsList) {
         this.collectionsList = collectionsList;
     }
 
@@ -65,7 +65,7 @@ public class CollectionsRecyclerViewAdapter extends RecyclerView.Adapter<Collect
         holder.nameTextView.setText(collectionsList.get(position).getName());
         final String productsText = mContext.getString(R.string.collectionsProductText, collectionsList.get(position).getProductsCount());
         holder.productsCountTextView.setText(productsText);
-        new LoadImageFromUrl(holder.backgroundImage).execute(collectionsList.get(position).getImg());
+        new LoadImageFromUrl(holder.backgroundImage, ((MainActivityView) mContext).getDatabase()).execute(collectionsList.get(position).getImg());
     }
 
     @Override

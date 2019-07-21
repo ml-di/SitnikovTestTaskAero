@@ -1,9 +1,8 @@
 package ru.aeroidea.sitnikovtesttask.MVP.Presenter;
 
-import android.content.Context;
-import android.os.AsyncTask;
+import android.database.sqlite.SQLiteException;
 import android.util.Base64;
-import androidx.recyclerview.widget.RecyclerView;
+import android.widget.Toast;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -13,16 +12,19 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.List;
 import javax.net.ssl.HttpsURLConnection;
 import ru.aeroidea.sitnikovtesttask.Activity.MainActivityView;
-import ru.aeroidea.sitnikovtesttask.Adapter.BannerPagerAdapter;
-import ru.aeroidea.sitnikovtesttask.Adapter.CollectionsRecyclerViewAdapter;
 import ru.aeroidea.sitnikovtesttask.Data.BannersData;
 import ru.aeroidea.sitnikovtesttask.Data.CollectionsData;
+import ru.aeroidea.sitnikovtesttask.Database.AppDatabase;
 import ru.aeroidea.sitnikovtesttask.MVP.Interface.Presenter.MainFragmentPresenterInterface;
 import ru.aeroidea.sitnikovtesttask.MVP.Interface.View.MainFragmentViewInterface;
 import ru.aeroidea.sitnikovtesttask.MVP.BasePresenter;
 import ru.aeroidea.sitnikovtesttask.R;
+import ru.aeroidea.sitnikovtesttask.Database.Loader.LoadBannersFromCache;
+import ru.aeroidea.sitnikovtesttask.Database.Loader.LoadCollectionsFromCache;
+import ru.aeroidea.sitnikovtesttask.Utils.Network.LoadData;
 
 public class MainFragmentPresenter extends BasePresenter<MainFragmentViewInterface> implements MainFragmentPresenterInterface {
 
@@ -75,10 +77,10 @@ public class MainFragmentPresenter extends BasePresenter<MainFragmentViewInterfa
     }
 
     @Override
-    public ArrayList<BannersData> getBannersList(String json) {
+    public List<BannersData> getBannersList(String json) {
 
         if (json != null) {
-            final ArrayList<BannersData> bannersList = new ArrayList<>();
+            final List<BannersData> bannersList = new ArrayList<>();
 
             try {
                 final JSONObject jObject = new JSONObject(json);
@@ -116,10 +118,10 @@ public class MainFragmentPresenter extends BasePresenter<MainFragmentViewInterfa
     }
 
     @Override
-    public ArrayList<CollectionsData> getCollectionsList(String json) {
+    public List<CollectionsData> getCollectionsList(String json) {
         if (json != null) {
 
-            final ArrayList<CollectionsData> collectionsList = new ArrayList<>();
+            final List<CollectionsData> collectionsList = new ArrayList<>();
             try {
                 final JSONObject jsonObject = new JSONObject(json);
                 final JSONArray collections = jsonObject.getJSONArray("collections");
@@ -143,43 +145,57 @@ public class MainFragmentPresenter extends BasePresenter<MainFragmentViewInterfa
     }
 
     @Override
-    public void loadAndSetData() {
-        new LoadData().execute();
+    public void setBannersCache(List<BannersData> bannersData) {
+
+        final AppDatabase db = ((MainActivityView) getView().getActivityContext()).getDatabase();
+        try {
+            if (db.getOpenHelper().getWritableDatabase().isOpen()) {
+                if (db.bannersDao().getCount() > 0) {
+                    db.bannersDao().deleteAll();
+                }
+
+                for (BannersData banner : bannersData) {
+                    db.bannersDao().insert(banner);
+                }
+            }
+        } catch (SQLiteException e) {
+            e.printStackTrace();
+            Toast.makeText(getView().getActivityContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
+        }
     }
 
-    private class LoadData extends AsyncTask<Void, Void, Void> {
+    @Override
+    public void setCollectionsCache(List<CollectionsData> collectionsData) {
 
-        private ArrayList<BannersData> bannerList;
-        private ArrayList<CollectionsData> collectionsList;
-        private Context mContext = getView().getActivityContext();
+        AppDatabase db = ((MainActivityView) getView().getActivityContext()).getDatabase();
+        try {
+            if (db.getOpenHelper().getWritableDatabase().isOpen()) {
+                if (db.collectionsDao().getCount() > 0) {
+                    db.collectionsDao().deleteAll();
+                }
 
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            ((MainActivityView) mContext).getPresenter().showProgressBar(-1);
+                for (CollectionsData collection : collectionsData) {
+                    db.collectionsDao().insert(collection);
+                }
+            }
+        } catch (SQLiteException e) {
+            e.printStackTrace();
+            Toast.makeText(getView().getActivityContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
         }
+    }
 
-        @Override
-        protected void onPostExecute(Void aVoid) {
-            super.onPostExecute(aVoid);
+    @Override
+    public void loadBannersCache() {
+        new LoadBannersFromCache(getView().getPresenter()).execute();
+    }
 
-            final BannerPagerAdapter bannerAdapter = new BannerPagerAdapter(bannerList, mContext);
-            final RecyclerView.Adapter collectionsRecyclerViewAdapter = new CollectionsRecyclerViewAdapter(collectionsList);
+    @Override
+    public void loadCollectionsCache() {
+        new LoadCollectionsFromCache(getView().getPresenter()).execute();
+    }
 
-            getView().getBannerViewPager().setAdapter(bannerAdapter);
-            getView().getCollectionsRecyclerView().setAdapter(collectionsRecyclerViewAdapter);
-
-            ((MainActivityView) mContext).getPresenter().hideProgressBar();
-        }
-
-        @Override
-        protected Void doInBackground(Void... voids) {
-
-            final String json = getData();
-            bannerList = getBannersList(json);
-            collectionsList = getCollectionsList(json);
-
-            return null;
-        }
+    @Override
+    public void loadAndSetData() {
+        new LoadData(getView().getPresenter()).execute();
     }
 }

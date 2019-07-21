@@ -10,6 +10,8 @@ import android.os.Bundle;
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import ru.aeroidea.sitnikovtesttask.Application;
+import ru.aeroidea.sitnikovtesttask.Database.AppDatabase;
 import ru.aeroidea.sitnikovtesttask.Fragment.BlankFragmentView;
 import ru.aeroidea.sitnikovtesttask.Fragment.MainFragmentView;
 import ru.aeroidea.sitnikovtesttask.MVP.Interface.Presenter.MainActivityPresenterInterface;
@@ -30,6 +32,7 @@ public class MainActivityView extends AppCompatActivity implements MainActivityV
     private Fragment mainFragment;
     private Fragment blankFragment;
     private MainActivityPresenterInterface presenter;
+    private AppDatabase db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,6 +60,9 @@ public class MainActivityView extends AppCompatActivity implements MainActivityV
             presenter.openFragment(getActualFragment(index), false);
             setTitleToolBar(getBottomNavigationViewSelectedTitle());
         }
+
+        if (db == null || !db.isOpen())
+            db = Application.getInstance().getDatabase();
     }
 
     @Override
@@ -64,6 +70,9 @@ public class MainActivityView extends AppCompatActivity implements MainActivityV
         super.onDestroy();
         if (presenter.isViewAttached() && isFinishing()) {
             presenter.detachView();
+        }
+        if(db != null && db.getOpenHelper().getReadableDatabase().isOpen()) {
+            db.close();
         }
     }
 
@@ -180,5 +189,10 @@ public class MainActivityView extends AppCompatActivity implements MainActivityV
     @Override
     public int getContentLayoutId() {
         return contentLayout.getId();
+    }
+
+    @Override
+    public AppDatabase getDatabase() {
+        return db;
     }
 }

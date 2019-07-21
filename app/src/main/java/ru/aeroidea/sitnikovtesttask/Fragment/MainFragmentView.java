@@ -95,4 +95,9 @@ public class MainFragmentView extends Fragment implements MainFragmentViewInterf
     public RecyclerView getCollectionsRecyclerView() {
         return collectionsRecyclerView;
     }
+
+    @Override
+    public MainFragmentPresenterInterface getPresenter() {
+        return presenter;
+    }
 }
